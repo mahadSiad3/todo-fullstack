@@ -50,6 +50,21 @@ try {
     res.status(400).json(error)
 }
 })
+app.put('/todos/:id', async(req,res)=>{
+    try {
+        console.log('PUT /todos/:id')
+       const todo = await  Todo.findById(req.params.id)
+       todo.completed=!todo.completed
+       const result = await todo.save()
+       console.log('result:'+ result)
+       console.log(todo)
+        res.json('test')
+    } catch (error) {
+        console.log(error)
+        res.json(error)
+    }
+})
+
 
 app.listen(port, ()=> {
     console.log('listening on port: ' + port)

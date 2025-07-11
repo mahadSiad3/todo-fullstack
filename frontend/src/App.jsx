@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import './App.css'
 import { useState } from 'react'
 import { useRef } from 'react'
+//import { get } from 'mongoose'
 
 function App() {
 
@@ -49,7 +50,7 @@ function App() {
     console.log(newTodo)
 
     setTodos([...todos, newTodo])
-
+    inputref.current.value=''
   }
 
   async function handleDelete(id) {
@@ -58,6 +59,19 @@ function App() {
       method: 'DELETE'
     })
     getData()
+  }
+
+  async function handleComplete(id) {
+   //console.log(id)
+    // const response = await fetch(`${BASE_URL}/todos/${id}`, {
+    await fetch(`${BASE_URL}/todos/${id}`, {
+      method: 'PUT'
+
+    })
+    getData()
+    // const data = await response.json() // to test the response
+    // console.log(data)
+    // console.log('updating')
   }
 
   return (
@@ -72,7 +86,9 @@ function App() {
       <ul>
         {todos.map(todo =>
           <li key={todo._id}>
-            <input type='checkbox' />
+            <input type='checkbox' 
+            checked ={todo.completed}
+            onChange={()=> handleComplete(todo._id)}/>
             {todo.text}
             <button onClick={() => handleDelete(todo._id)}>X</button>
           </li>
