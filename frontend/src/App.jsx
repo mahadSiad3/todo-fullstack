@@ -5,26 +5,27 @@ import { useRef } from 'react'
 
 function App() {
 
-  const [todos,setTodos]= useState([])
-const inputref=  useRef()
+  const [todos, setTodos] = useState([])
+  const inputref = useRef()
+  const BASE_URL = 'http://localhost:3000'
+
+  async function getData() {
+    try {
+      const response = await fetch('http://localhost:3000/todos')
+      const data = await response.json()
+      console.log(data)
+      setTodos(data)
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   useEffect(() => {
-
-    async function getData() {
-      try {
-        const response = await fetch('http://localhost:3000/todos')
-        const data = await response.json()
-        console.log(data) 
-        setTodos(data)
-      } catch (e) {
-        console.log(e)
-      }
-    }
 
     getData()
 
   }, [])
- 
+
   console.log(todos)
 
   async function handleSumbit(event) {
@@ -35,11 +36,11 @@ const inputref=  useRef()
     }
     //to send to the server use a post request 
 
-    const response = await fetch('http://localhost:3000/todos',{
-      method:'POST',
+    const response = await fetch('http://localhost:3000/todos', {
+      method: 'POST',
       body: JSON.stringify(todo),
-      headers:{
-        'content-type':'application/json'
+      headers: {
+        'content-type': 'application/json'
       }
     })
 
@@ -51,18 +52,30 @@ const inputref=  useRef()
 
   }
 
+  async function handleDelete(id) {
+    console.log(id)
+    await fetch(`${BASE_URL}/todos/${id}`, {
+      method: 'DELETE'
+    })
+    getData()
+  }
+
   return (
     <>
-    <h1>Todos</h1>
+      <h1>Todos</h1>
       {/* Hello (from frontend) */}
       <form onSubmit={handleSumbit}>
-      <input type="text"  ref={inputref}/>
-      <button>Submit</button>
+        <input type="text" ref={inputref} />
+        <button>Submit</button>
       </form>
 
       <ul>
         {todos.map(todo =>
-          <li key={todo._id}>{todo.text}</li>
+          <li key={todo._id}>
+            <input type='checkbox' />
+            {todo.text}
+            <button onClick={() => handleDelete(todo._id)}>X</button>
+          </li>
         )}
       </ul>
     </>
