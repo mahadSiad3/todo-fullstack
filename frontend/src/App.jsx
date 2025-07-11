@@ -2,26 +2,26 @@ import { useEffect } from 'react'
 import './App.css'
 
 function App() {
-  
-  useEffect(()=>{
+
+  useEffect(() => {
+
     async function getData() {
-     try {
-      
-  const response= await fetch('http://localhost:3000/')
-      const data = await response.json()
-      console.log(data)
-     } catch (error) {
-      console.log(error)
-     }
+      try {
+        const response = await fetch('http://localhost:3000')
+        const data = await response.json()
+        console.log(data) 
+      } catch (e) {
+        console.log(e)
+      }
     }
-  },[])
 
-   
-    
+    getData()
 
+  }, [])
+ 
   return (
     <>
-      hello (from frontend)
+      Hello (from frontend)
     </>
   )
 }
